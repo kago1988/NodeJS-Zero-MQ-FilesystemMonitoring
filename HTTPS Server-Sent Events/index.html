@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SSE File Change Monitor</title>
+</head>
+<body>
+  <div>
+    <h1>File Change Monitor</h1>
+    <div id="events"></div>
+  </div>
+  <script>
+    const eventSource = new EventSource('/events');
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const eventsDiv = document.getElementById('events');
+      const message = document.createElement('p');
+      message.textContent = `File changed: ${data.file} at ${new Date(data.timestamp).toLocaleTimeString()}`;
+      eventsDiv.appendChild(message);
+    };
+
+    eventSource.onerror = (event) => {
+      console.error('EventSource error:', event);
+    };
+  </script>
+</body>
+</html>
